@@ -12,6 +12,7 @@ import {
   Moon,
   Sun,
   ChevronRight,
+  Bell,
 } from "lucide-react";
 import type { VocabularyLevel } from "@/types";
 import { useState, useEffect } from "react";
@@ -24,11 +25,44 @@ function ProfilePage() {
   const { user, loading, signOut } = useAuth();
   const { data: vocabularies } = useVocabularies();
   const [darkMode, setDarkMode] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [notificationPermission, setNotificationPermission] =
+    useState<NotificationPermission>("default");
 
   // Check for dark mode on mount
   useEffect(() => {
     setDarkMode(document.documentElement.classList.contains("dark"));
+    
+    // Check notification status
+    if ("Notification" in window) {
+      setNotificationPermission(Notification.permission);
+      setNotificationsEnabled(Notification.permission === "granted");
+    }
   }, []);
+
+  const toggleNotifications = async () => {
+    if (!("Notification" in window)) {
+      alert("Trình duyệt của bạn không hỗ trợ thông báo!");
+      return;
+    }
+
+    if (notificationsEnabled) {
+      // Cannot programmatically revoke permission, just update state simulation
+      // real app would unsubscribe from push server
+      setNotificationsEnabled(false);
+    } else {
+      const permission = await Notification.requestPermission();
+      setNotificationPermission(permission);
+      
+      if (permission === "granted") {
+        setNotificationsEnabled(true);
+        new Notification("Xin chào! 👋", {
+          body: "Bạn đã bật nhắc nhở học tập thành công!",
+          icon: "/logo192.png"
+        });
+      }
+    }
+  };
 
   const toggleDarkMode = () => {
     document.documentElement.classList.toggle("dark");
@@ -188,6 +222,38 @@ function ProfilePage() {
                     layout
                     className={`w-4 h-4 bg-white rounded-full shadow ${
                       darkMode ? "ml-6" : "ml-0"
+                    }`}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                </div>
+              </button>
+
+              <div className="h-px bg-gray-100 dark:bg-gray-700" />
+
+              {/* Notification Toggle */}
+              <button
+                onClick={toggleNotifications}
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                disabled={notificationPermission === "denied"}
+              >
+                <div className="flex items-center gap-3">
+                  <Bell className={`h-5 w-5 ${notificationsEnabled ? "text-brand-700" : "text-gray-400"}`} />
+                  <div className="text-left">
+                    <span className="font-medium block">Nhắc nhở học tập</span>
+                    {notificationPermission === "denied" && (
+                      <span className="text-xs text-red-500">Đã bị chặn trong cài đặt browser</span>
+                    )}
+                  </div>
+                </div>
+                <div
+                  className={`w-12 h-6 rounded-full p-1 transition-colors ${
+                    notificationsEnabled ? "bg-brand-700" : "bg-gray-200"
+                  }`}
+                >
+                  <motion.div
+                    layout
+                    className={`w-4 h-4 bg-white rounded-full shadow ${
+                      notificationsEnabled ? "ml-6" : "ml-0"
                     }`}
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
