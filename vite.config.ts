@@ -19,7 +19,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'logo192.png', 'logo512.png'],
+      includeAssets: ['favicon.png', 'logo192.png', 'logo512.png'],
       manifest: {
         name: 'VocabMaster - Học từ vựng tiếng Anh',
         short_name: 'VocabMaster',
