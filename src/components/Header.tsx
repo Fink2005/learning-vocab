@@ -87,14 +87,16 @@ export default function Header() {
                 {user.email}
               </div>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <User className="mr-2 h-4 w-4" />
-                Profile
+              <DropdownMenuItem asChild>
+                <Link to="/profile" className="cursor-pointer w-full flex items-center">
+                  <User className="mr-2 h-4 w-4" />
+                  Hồ sơ cá nhân
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSignOut}>
+              <DropdownMenuItem onClick={handleSignOut} className="text-red-600 focus:text-red-600 cursor-pointer">
                 <LogOut className="mr-2 h-4 w-4" />
-                Sign out
+                Đăng xuất
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
