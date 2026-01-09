@@ -2,7 +2,6 @@ import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/useAuth";
 import { useVocabularies } from "@/hooks/useVocabulary";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
 import {
