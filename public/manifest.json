@@ -1,7 +1,7 @@
 {
-  "short_name": "VocabMaster",
-  "name": "VocabMaster - Học từ vựng tiếng Anh",
-  "description": "Ứng dụng học từ vựng tiếng Anh thông minh với phân loại A1-C2",
+  "short_name": "VocabDuck",
+  "name": "VocabDuck - Học từ vựng tiếng Anh",
+  "description": "Ứng dụng học từ vựng tiếng Anh thông minh với phân loại A1-C2", 
   "icons": [
     {
       "src": "favicon.ico",

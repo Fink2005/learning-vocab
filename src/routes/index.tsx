@@ -46,7 +46,7 @@ function Dashboard() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#1C4D8D] dark:text-[#BDE8F5]">
-            {user ? `Xin chào, ${user.full_name || "bạn"}!` : "Chào mừng đến VocabMaster!"}
+            {user ? `Xin chào, ${user.full_name || "bạn"}!` : "Chào mừng đến VocabDuck!"}
           </h1>
           <p className="text-muted-foreground mt-1">
             {user

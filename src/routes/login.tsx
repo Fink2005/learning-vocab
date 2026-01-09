@@ -25,7 +25,7 @@ function LoginPage() {
             <BookOpen size={40} className="text-white" />
           </div>
           <h1 className="text-3xl font-bold text-[#1C4D8D] dark:text-[#BDE8F5]">
-            VocabMaster
+            VocabDuck
           </h1>
           <p className="text-muted-foreground mt-2">
             Học từ vựng tiếng Anh thông minh

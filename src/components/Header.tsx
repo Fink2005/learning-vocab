@@ -44,7 +44,7 @@ export default function Header() {
               <BookOpen size={24} className="text-white" />
             </div>
             <span className="text-xl font-bold hidden sm:block">
-              VocabMaster
+              VocabDuck
             </span>
           </Link>
         </div>
@@ -144,7 +144,7 @@ export default function Header() {
             <div className="w-10 h-10 bg-[#4988C4] rounded-xl flex items-center justify-center">
               <BookOpen size={24} />
             </div>
-            <span className="text-xl font-bold">VocabMaster</span>
+            <span className="text-xl font-bold">VocabDuck</span>
           </div>
           <button
             onClick={() => setIsOpen(false)}

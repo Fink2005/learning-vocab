@@ -21,8 +21,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.png', 'logo192.png', 'logo512.png'],
       manifest: {
-        name: 'VocabMaster - Học từ vựng tiếng Anh',
-        short_name: 'VocabMaster',
+        name: 'VocabDuck - Học từ vựng tiếng Anh',
+        short_name: 'VocabDuck',
         description: 'Ứng dụng học từ vựng tiếng Anh thông minh với phân loại A1-C2',
         theme_color: '#1C4D8D',
         background_color: '#BDE8F5',
