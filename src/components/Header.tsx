@@ -63,7 +63,7 @@ export default function Header() {
       </nav>
 
       {/* User Menu */}
-      <div className="flex items-center gap-3">
+      <div className="md:flex items-center gap-3 hidden">
         {!loading && user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

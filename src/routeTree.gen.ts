@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as VocabularyIndexRouteImport } from './routes/vocabulary/index'
 import { Route as VocabularyNewRouteImport } from './routes/vocabulary/new'
 import { Route as VocabularyIdRouteImport } from './routes/vocabulary/$id'
+import { Route as VocabularyEditIdRouteImport } from './routes/vocabulary/edit.$id'
 
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
@@ -46,6 +47,11 @@ const VocabularyIdRoute = VocabularyIdRouteImport.update({
   path: '/vocabulary/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VocabularyEditIdRoute = VocabularyEditIdRouteImport.update({
+  id: '/vocabulary/edit/$id',
+  path: '/vocabulary/edit/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/vocabulary/$id': typeof VocabularyIdRoute
   '/vocabulary/new': typeof VocabularyNewRoute
   '/vocabulary': typeof VocabularyIndexRoute
+  '/vocabulary/edit/$id': typeof VocabularyEditIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/vocabulary/$id': typeof VocabularyIdRoute
   '/vocabulary/new': typeof VocabularyNewRoute
   '/vocabulary': typeof VocabularyIndexRoute
+  '/vocabulary/edit/$id': typeof VocabularyEditIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +79,7 @@ export interface FileRoutesById {
   '/vocabulary/$id': typeof VocabularyIdRoute
   '/vocabulary/new': typeof VocabularyNewRoute
   '/vocabulary/': typeof VocabularyIndexRoute
+  '/vocabulary/edit/$id': typeof VocabularyEditIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,6 +90,7 @@ export interface FileRouteTypes {
     | '/vocabulary/$id'
     | '/vocabulary/new'
     | '/vocabulary'
+    | '/vocabulary/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,6 +99,7 @@ export interface FileRouteTypes {
     | '/vocabulary/$id'
     | '/vocabulary/new'
     | '/vocabulary'
+    | '/vocabulary/edit/$id'
   id:
     | '__root__'
     | '/'
@@ -97,6 +108,7 @@ export interface FileRouteTypes {
     | '/vocabulary/$id'
     | '/vocabulary/new'
     | '/vocabulary/'
+    | '/vocabulary/edit/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,6 +118,7 @@ export interface RootRouteChildren {
   VocabularyIdRoute: typeof VocabularyIdRoute
   VocabularyNewRoute: typeof VocabularyNewRoute
   VocabularyIndexRoute: typeof VocabularyIndexRoute
+  VocabularyEditIdRoute: typeof VocabularyEditIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -152,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VocabularyIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/vocabulary/edit/$id': {
+      id: '/vocabulary/edit/$id'
+      path: '/vocabulary/edit/$id'
+      fullPath: '/vocabulary/edit/$id'
+      preLoaderRoute: typeof VocabularyEditIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -162,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   VocabularyIdRoute: VocabularyIdRoute,
   VocabularyNewRoute: VocabularyNewRoute,
   VocabularyIndexRoute: VocabularyIndexRoute,
+  VocabularyEditIdRoute: VocabularyEditIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

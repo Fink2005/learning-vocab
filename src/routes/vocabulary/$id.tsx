@@ -27,8 +27,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
-  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
@@ -136,7 +134,7 @@ function VocabularyDetailPage() {
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="icon" asChild>
-                  <Link to="/vocabulary/$id" params={{ id: vocabulary.id }}>
+                  <Link to="/vocabulary/edit/$id" params={{ id: vocabulary.id }}>
                     <Pencil className="h-4 w-4" />
                   </Link>
                 </Button>
@@ -258,29 +256,36 @@ function VocabularyDetailPage() {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Xác nhận xóa</DialogTitle>
-            <DialogDescription>
-              Bạn có chắc chắn muốn xóa từ "{vocabulary.word}"? Hành động này
-              không thể hoàn tác.
+        <DialogContent className="p-0 gap-0 sm:max-w-md rounded-2xl overflow-hidden">
+          <div className="p-6 flex flex-col items-center text-center">
+            <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
+              <Trash2 className="h-6 w-6 text-red-600 dark:text-red-400" />
+            </div>
+            <DialogTitle className="text-xl mb-2">Xóa từ vựng?</DialogTitle>
+            <DialogDescription className="text-center text-base">
+              Bạn có chắc chắn muốn xóa "{vocabulary.word}"? <br />
+              Hành động này không thể hoàn tác.
             </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
+          </div>
+          <div className="grid grid-cols-2 border-t border-gray-100 dark:border-gray-800 divide-x divide-gray-100 dark:divide-gray-800">
+            <button
+              className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-medium text-gray-700 dark:text-gray-300"
+              onClick={() => setShowDeleteDialog(false)}
+            >
               Hủy
-            </Button>
-            <Button
-              variant="destructive"
+            </button>
+            <button
+              className="p-4 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 font-bold transition-colors disabled:opacity-50"
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {deleteMutation.isPending ? (
+                <Loader2 className="h-5 w-5 animate-spin mx-auto" />
+              ) : (
+                "Xóa ngay"
               )}
-              Xóa
-            </Button>
-          </DialogFooter>
+            </button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
