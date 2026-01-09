@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VocabularyIndexRouteImport } from './routes/vocabulary/index'
 import { Route as VocabularyNewRouteImport } from './routes/vocabulary/new'
 import { Route as VocabularyIdRouteImport } from './routes/vocabulary/$id'
 
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -44,6 +50,7 @@ const VocabularyIdRoute = VocabularyIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/vocabulary/$id': typeof VocabularyIdRoute
   '/vocabulary/new': typeof VocabularyNewRoute
   '/vocabulary': typeof VocabularyIndexRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/vocabulary/$id': typeof VocabularyIdRoute
   '/vocabulary/new': typeof VocabularyNewRoute
   '/vocabulary': typeof VocabularyIndexRoute
@@ -59,6 +67,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/vocabulary/$id': typeof VocabularyIdRoute
   '/vocabulary/new': typeof VocabularyNewRoute
   '/vocabulary/': typeof VocabularyIndexRoute
@@ -68,15 +77,23 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/profile'
     | '/vocabulary/$id'
     | '/vocabulary/new'
     | '/vocabulary'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/vocabulary/$id' | '/vocabulary/new' | '/vocabulary'
+  to:
+    | '/'
+    | '/login'
+    | '/profile'
+    | '/vocabulary/$id'
+    | '/vocabulary/new'
+    | '/vocabulary'
   id:
     | '__root__'
     | '/'
     | '/login'
+    | '/profile'
     | '/vocabulary/$id'
     | '/vocabulary/new'
     | '/vocabulary/'
@@ -85,6 +102,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
+  ProfileRoute: typeof ProfileRoute
   VocabularyIdRoute: typeof VocabularyIdRoute
   VocabularyNewRoute: typeof VocabularyNewRoute
   VocabularyIndexRoute: typeof VocabularyIndexRoute
@@ -92,6 +110,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -133,6 +158,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
+  ProfileRoute: ProfileRoute,
   VocabularyIdRoute: VocabularyIdRoute,
   VocabularyNewRoute: VocabularyNewRoute,
   VocabularyIndexRoute: VocabularyIndexRoute,
