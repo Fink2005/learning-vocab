@@ -30,7 +30,7 @@ export default function BottomNav() {
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 pb-[calc(env(safe-area-inset-bottom)+6px)] lg:hidden"
     >
-      <div className="flex items-center justify-around h-16">
+      <div className="flex items-center justify-around h-14">
         {navItems.map((item) => {
           const active = isActive(item.href);
           const Icon = item.icon;

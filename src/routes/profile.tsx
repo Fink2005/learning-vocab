@@ -112,7 +112,7 @@ function ProfilePage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-gray-50 dark:bg-gray-900 pb-4 relative overflow-hidden">
+    <div className="min-h-[calc(100vh-64px)] bg-gray-50 dark:bg-gray-900 pb-4 relative overflow-x-hidden">
       {/* Profile Header */}
       <div className="bg-brand-700 text-white px-4 pt-4 pb-16 -mt-1">
         <motion.div
@@ -349,9 +349,9 @@ function ProfilePage() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-50 bg-gray-50 dark:bg-gray-900 flex flex-col"
+            className="fixed inset-0 z-[60] bg-gray-50 dark:bg-gray-900 flex flex-col"
           >
-            <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center gap-3 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center gap-3 shadow-sm shrink-0">
               <button
                 onClick={() => setShowLanguageSelector(false)}
                 className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -361,7 +361,7 @@ function ProfilePage() {
               <h2 className="text-lg font-semibold">Chọn ngôn ngữ học</h2>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-24 scrollbar-hide">
                {languages.map((lang) => {
                  const isSelected = currentLanguageId === lang.id;
                  return (
