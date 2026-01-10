@@ -14,7 +14,6 @@ import {
   Trash2, 
   Search,
   BookOpen,
-  ArrowRight
 } from "lucide-react";
 import { getLanguageFlag } from "@/lib/utils";
 import { useLanguages } from "@/hooks/useLanguages";
