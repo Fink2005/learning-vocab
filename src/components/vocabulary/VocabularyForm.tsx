@@ -176,9 +176,6 @@ export function VocabularyForm({ vocabulary, mode = "create" }: VocabularyFormPr
                    <span className="font-semibold text-brand-900 dark:text-brand-100">
                      {languages.find(l => l.id === currentLanguageId)?.name}
                    </span>
-                   <span className="text-xs text-brand-600/80 dark:text-brand-400">
-                     Đang thêm từ vào ngôn ngữ này
-                   </span>
                  </div>
                  <div className="ml-auto">
                    <Check size={18} className="text-brand-600" />

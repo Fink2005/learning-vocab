@@ -22,6 +22,7 @@ import {
   Quote,
   StickyNote,
   Calendar,
+  Volume2,
 } from "lucide-react";
 import {
   Dialog,
@@ -32,6 +33,7 @@ import {
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { useSpeech } from "@/hooks/useSpeech";
 
 export const Route = createFileRoute("/vocabulary/$id")({
   component: VocabularyDetailPage,
@@ -49,6 +51,7 @@ function VocabularyDetailPage() {
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [newSynonym, setNewSynonym] = useState("");
+  const { speak, isSpeaking, isSupported } = useSpeech('en-US');
 
   if (!authLoading && !user) {
     return <Navigate to="/login" />;
@@ -129,9 +132,22 @@ function VocabularyDetailPage() {
           <CardHeader className="pb-4">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
-                <CardTitle className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  {vocabulary.word}
-                </CardTitle>
+                <div className="flex items-center gap-3 mb-2">
+                  <CardTitle className="text-3xl font-bold text-gray-900 dark:text-white">
+                    {vocabulary.word}
+                  </CardTitle>
+                  {isSupported && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={`h-10 w-10 rounded-full transition-colors ${isSpeaking ? 'text-brand-600 bg-brand-100' : 'text-muted-foreground hover:text-brand-600 hover:bg-brand-50'}`}
+                      onClick={() => speak(vocabulary.word)}
+                      disabled={isSpeaking}
+                    >
+                      <Volume2 className={`h-5 w-5 ${isSpeaking ? 'animate-pulse' : ''}`} />
+                    </Button>
+                  )}
+                </div>
                 <LevelBadge level={vocabulary.level} />
               </div>
               <div className="flex gap-2">

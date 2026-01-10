@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Volume2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { levelColors } from "@/lib/levels";
+import { useSpeech } from "@/hooks/useSpeech";
 import type { VocabularyLevel } from "@/types";
 
 interface FlashCardProps {
@@ -26,6 +27,13 @@ export function FlashCard({
   onFlip,
   flipHint = "Tap to flip",
 }: FlashCardProps) {
+  const { speak, isSpeaking, isSupported } = useSpeech('en-US');
+
+  const handleSpeak = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card flip
+    speak(word);
+  };
+
   return (
     <div 
       className="w-full h-full cursor-pointer preserve-3d"
@@ -72,16 +80,24 @@ export function FlashCard({
             <span className="text-3xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-3 select-none">
               {word}
             </span>
-            {ipa && (
-              <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
+              {ipa && (
                 <span className="text-lg sm:text-xl text-muted-foreground font-mono select-none">
                   /{ipa}/
                 </span>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-brand-600">
-                  <Volume2 className="h-4 w-4" />
+              )}
+              {isSupported && (
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={`h-10 w-10 rounded-full transition-colors ${isSpeaking ? 'text-brand-600 bg-brand-100' : 'text-muted-foreground hover:text-brand-600 hover:bg-brand-50'}`}
+                  onClick={handleSpeak}
+                  disabled={isSpeaking}
+                >
+                  <Volume2 className={`h-5 w-5 ${isSpeaking ? 'animate-pulse' : ''}`} />
                 </Button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
           
           {/* Hint */}

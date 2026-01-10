@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LevelBadge } from "./LevelBadge";
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { MoreHorizontal, Pencil, Trash2, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useSpeech } from "@/hooks/useSpeech";
 
 interface VocabularyCardProps {
   vocabulary: Vocabulary;
@@ -18,20 +19,41 @@ interface VocabularyCardProps {
 }
 
 export function VocabularyCard({ vocabulary, onDelete }: VocabularyCardProps) {
+  const { speak, isSpeaking, isSupported } = useSpeech('en-US');
+
+  const handleSpeak = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    speak(vocabulary.word);
+  };
+
   return (
     <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-violet-500">
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <Link
-              to="/vocabulary/$id"
-              params={{ id: vocabulary.id }}
-              className="block"
-            >
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white hover:text-violet-600 dark:hover:text-violet-400 transition-colors truncate">
-                {vocabulary.word}
-              </h3>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                to="/vocabulary/$id"
+                params={{ id: vocabulary.id }}
+                className="block flex-1 min-w-0"
+              >
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white hover:text-violet-600 dark:hover:text-violet-400 transition-colors truncate">
+                  {vocabulary.word}
+                </h3>
+              </Link>
+              {isSupported && (
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={`h-8 w-8 shrink-0 rounded-full transition-colors ${isSpeaking ? 'text-brand-600 bg-brand-100' : 'text-muted-foreground hover:text-brand-600 hover:bg-brand-50'}`}
+                  onClick={handleSpeak}
+                  disabled={isSpeaking}
+                >
+                  <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} />
+                </Button>
+              )}
+            </div>
             {vocabulary.ipa && (
               <p className="text-xs text-muted-foreground font-mono mb-1 opacity-80">
                 /{vocabulary.ipa}/

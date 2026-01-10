@@ -106,7 +106,7 @@ export default function Header() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="relative h-9 w-9 rounded-full bg-brand-800 ring-2 ring-brand-600 hover:bg-brand-700"
+                className="h-9 w-9 rounded-full bg-brand-800 ring-2 ring-brand-600 hover:bg-brand-700 md:flex hidden"
               >
                 <Avatar className="h-9 w-9">
                   <AvatarImage src={user.avatar_url} alt={user.full_name || ""} />
