@@ -130,17 +130,18 @@ function VocabularyDetailPage() {
         {/* Main Card */}
         <Card className="border-t-4 border-t-violet-500">
           <CardHeader className="pb-4">
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <CardTitle className="text-3xl font-bold text-gray-900 dark:text-white">
+            {/* Title row - responsive layout */}
+            <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-2">
+                  <CardTitle className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white break-words">
                     {vocabulary.word}
                   </CardTitle>
                   {isSupported && (
                     <Button
                       variant="ghost"
                       size="icon"
-                      className={`h-10 w-10 rounded-full transition-colors ${isSpeaking ? 'text-brand-600 bg-brand-100' : 'text-muted-foreground hover:text-brand-600 hover:bg-brand-50'}`}
+                      className={`h-9 w-9 shrink-0 rounded-full transition-colors ${isSpeaking ? 'text-brand-600 bg-brand-100' : 'text-muted-foreground hover:text-brand-600 hover:bg-brand-50'}`}
                       onClick={() => speak(vocabulary.word)}
                       disabled={isSpeaking}
                     >
@@ -150,7 +151,7 @@ function VocabularyDetailPage() {
                 </div>
                 <LevelBadge level={vocabulary.level} />
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 shrink-0">
                 <Button variant="outline" size="icon" asChild>
                   <Link to="/vocabulary/edit/$id" params={{ id: vocabulary.id }}>
                     <Pencil className="h-4 w-4" />

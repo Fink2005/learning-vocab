@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Plus, Search, Loader2, BookOpen, Filter, X, Trash2 } from "lucide-react";
+import { Plus, Search, Loader2, BookOpen, Filter, X, Trash2, Volume2 } from "lucide-react";
 import type { VocabularyLevel } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -23,6 +23,7 @@ import { levelColors, getLevelsForSystem, levelGradients, levelBorderColors } fr
 
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useLanguages } from "@/hooks/useLanguages";
+import { useSpeech } from "@/hooks/useSpeech";
 
 export const Route = createFileRoute("/vocabulary/")(({
   component: VocabularyListPage,
@@ -39,6 +40,7 @@ function VocabularyListPage() {
   const [selectedLevel, setSelectedLevel] = useState<VocabularyLevel | undefined>();
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const { speak, speakingText } = useSpeech('en-US');
 
   const { data: vocabularies, isLoading, error } = useVocabularies({
     level: selectedLevel,
@@ -228,6 +230,20 @@ function VocabularyListPage() {
                                   >
                                     {vocab.level}
                                   </span>
+                                  {/* Speaker button */}
+                                  <motion.button
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      speak(vocab.word);
+                                    }}
+                                    disabled={speakingText === vocab.word}
+                                    className={`p-1.5 rounded-full transition-all duration-200 ${speakingText === vocab.word ? 'text-brand-600 bg-brand-100' : 'text-gray-400 hover:text-brand-500 hover:bg-brand-50'}`}
+                                  >
+                                    <Volume2 size={16} className={speakingText === vocab.word ? 'animate-pulse' : ''} />
+                                  </motion.button>
                                 </div>
                                 <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 font-medium">
                                   {vocab.meaning}

@@ -112,7 +112,7 @@ function ProfilePage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-gray-50 dark:bg-gray-900 sm:pb-4 pb-20 relative overflow-x-hidden">
+    <div className="min-h-[calc(100vh-64px)] bg-gray-50 dark:bg-gray-900 sm:pb-4 pb-28 relative overflow-x-hidden">
       {/* Profile Header */}
       <div className="bg-brand-700 text-white px-4 pt-4 pb-16 -mt-1">
         <motion.div

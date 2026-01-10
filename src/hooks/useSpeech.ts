@@ -11,6 +11,7 @@ interface UseSpeechReturn {
   speak: (text: string, options?: UseSpeechOptions) => void;
   stop: () => void;
   isSpeaking: boolean;
+  speakingText: string | null;
   isSupported: boolean;
   voices: SpeechSynthesisVoice[];
 }
@@ -21,6 +22,7 @@ interface UseSpeechReturn {
  */
 export function useSpeech(defaultLang = 'en-US'): UseSpeechReturn {
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [speakingText, setSpeakingText] = useState<string | null>(null);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [isSupported, setIsSupported] = useState(false);
 
@@ -69,9 +71,18 @@ export function useSpeech(defaultLang = 'en-US'): UseSpeechReturn {
     utterance.volume = options?.volume ?? 1;
 
     // Event listeners
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
+    utterance.onstart = () => {
+      setIsSpeaking(true);
+      setSpeakingText(text);
+    };
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      setSpeakingText(null);
+    };
+    utterance.onerror = () => {
+      setIsSpeaking(false);
+      setSpeakingText(null);
+    };
 
     window.speechSynthesis.speak(utterance);
   }, [isSupported, voices, defaultLang]);
@@ -80,6 +91,7 @@ export function useSpeech(defaultLang = 'en-US'): UseSpeechReturn {
     if (isSupported) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
+      setSpeakingText(null);
     }
   }, [isSupported]);
 
@@ -87,6 +99,7 @@ export function useSpeech(defaultLang = 'en-US'): UseSpeechReturn {
     speak,
     stop,
     isSpeaking,
+    speakingText,
     isSupported,
     voices,
   };

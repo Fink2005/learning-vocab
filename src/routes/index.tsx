@@ -52,7 +52,7 @@ function Dashboard() {
   const recentWords = vocabularies?.slice(0, 5) || [];
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-[#BDE8F5]/10 dark:bg-gray-900">
+    <div className="min-h-[calc(100vh-50px)] bg-[#BDE8F5]/10 dark:bg-gray-900 pb-20">
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
