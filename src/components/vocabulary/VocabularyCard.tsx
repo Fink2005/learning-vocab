@@ -32,6 +32,11 @@ export function VocabularyCard({ vocabulary, onDelete }: VocabularyCardProps) {
                 {vocabulary.word}
               </h3>
             </Link>
+            {vocabulary.ipa && (
+              <p className="text-xs text-muted-foreground font-mono mb-1 opacity-80">
+                /{vocabulary.ipa}/
+              </p>
+            )}
             <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
               {vocabulary.meaning}
             </p>

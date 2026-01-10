@@ -13,9 +13,13 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VocabularyIndexRouteImport } from './routes/vocabulary/index'
+import { Route as StudyIndexRouteImport } from './routes/study/index'
 import { Route as VocabularyNewRouteImport } from './routes/vocabulary/new'
 import { Route as VocabularyIdRouteImport } from './routes/vocabulary/$id'
+import { Route as StudyNewRouteImport } from './routes/study/new'
 import { Route as VocabularyEditIdRouteImport } from './routes/vocabulary/edit.$id'
+import { Route as StudyIdLearnRouteImport } from './routes/study/$id/learn'
+import { Route as StudyIdEditRouteImport } from './routes/study/$id/edit'
 
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
@@ -37,6 +41,11 @@ const VocabularyIndexRoute = VocabularyIndexRouteImport.update({
   path: '/vocabulary/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudyIndexRoute = StudyIndexRouteImport.update({
+  id: '/study/',
+  path: '/study/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VocabularyNewRoute = VocabularyNewRouteImport.update({
   id: '/vocabulary/new',
   path: '/vocabulary/new',
@@ -47,9 +56,24 @@ const VocabularyIdRoute = VocabularyIdRouteImport.update({
   path: '/vocabulary/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudyNewRoute = StudyNewRouteImport.update({
+  id: '/study/new',
+  path: '/study/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VocabularyEditIdRoute = VocabularyEditIdRouteImport.update({
   id: '/vocabulary/edit/$id',
   path: '/vocabulary/edit/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudyIdLearnRoute = StudyIdLearnRouteImport.update({
+  id: '/study/$id/learn',
+  path: '/study/$id/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudyIdEditRoute = StudyIdEditRouteImport.update({
+  id: '/study/$id/edit',
+  path: '/study/$id/edit',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -57,18 +81,26 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
+  '/study/new': typeof StudyNewRoute
   '/vocabulary/$id': typeof VocabularyIdRoute
   '/vocabulary/new': typeof VocabularyNewRoute
+  '/study': typeof StudyIndexRoute
   '/vocabulary': typeof VocabularyIndexRoute
+  '/study/$id/edit': typeof StudyIdEditRoute
+  '/study/$id/learn': typeof StudyIdLearnRoute
   '/vocabulary/edit/$id': typeof VocabularyEditIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
+  '/study/new': typeof StudyNewRoute
   '/vocabulary/$id': typeof VocabularyIdRoute
   '/vocabulary/new': typeof VocabularyNewRoute
+  '/study': typeof StudyIndexRoute
   '/vocabulary': typeof VocabularyIndexRoute
+  '/study/$id/edit': typeof StudyIdEditRoute
+  '/study/$id/learn': typeof StudyIdLearnRoute
   '/vocabulary/edit/$id': typeof VocabularyEditIdRoute
 }
 export interface FileRoutesById {
@@ -76,9 +108,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
+  '/study/new': typeof StudyNewRoute
   '/vocabulary/$id': typeof VocabularyIdRoute
   '/vocabulary/new': typeof VocabularyNewRoute
+  '/study/': typeof StudyIndexRoute
   '/vocabulary/': typeof VocabularyIndexRoute
+  '/study/$id/edit': typeof StudyIdEditRoute
+  '/study/$id/learn': typeof StudyIdLearnRoute
   '/vocabulary/edit/$id': typeof VocabularyEditIdRoute
 }
 export interface FileRouteTypes {
@@ -87,27 +123,39 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/profile'
+    | '/study/new'
     | '/vocabulary/$id'
     | '/vocabulary/new'
+    | '/study'
     | '/vocabulary'
+    | '/study/$id/edit'
+    | '/study/$id/learn'
     | '/vocabulary/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/profile'
+    | '/study/new'
     | '/vocabulary/$id'
     | '/vocabulary/new'
+    | '/study'
     | '/vocabulary'
+    | '/study/$id/edit'
+    | '/study/$id/learn'
     | '/vocabulary/edit/$id'
   id:
     | '__root__'
     | '/'
     | '/login'
     | '/profile'
+    | '/study/new'
     | '/vocabulary/$id'
     | '/vocabulary/new'
+    | '/study/'
     | '/vocabulary/'
+    | '/study/$id/edit'
+    | '/study/$id/learn'
     | '/vocabulary/edit/$id'
   fileRoutesById: FileRoutesById
 }
@@ -115,9 +163,13 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
+  StudyNewRoute: typeof StudyNewRoute
   VocabularyIdRoute: typeof VocabularyIdRoute
   VocabularyNewRoute: typeof VocabularyNewRoute
+  StudyIndexRoute: typeof StudyIndexRoute
   VocabularyIndexRoute: typeof VocabularyIndexRoute
+  StudyIdEditRoute: typeof StudyIdEditRoute
+  StudyIdLearnRoute: typeof StudyIdLearnRoute
   VocabularyEditIdRoute: typeof VocabularyEditIdRoute
 }
 
@@ -151,6 +203,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VocabularyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/study/': {
+      id: '/study/'
+      path: '/study'
+      fullPath: '/study'
+      preLoaderRoute: typeof StudyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vocabulary/new': {
       id: '/vocabulary/new'
       path: '/vocabulary/new'
@@ -165,11 +224,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VocabularyIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/study/new': {
+      id: '/study/new'
+      path: '/study/new'
+      fullPath: '/study/new'
+      preLoaderRoute: typeof StudyNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vocabulary/edit/$id': {
       id: '/vocabulary/edit/$id'
       path: '/vocabulary/edit/$id'
       fullPath: '/vocabulary/edit/$id'
       preLoaderRoute: typeof VocabularyEditIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/study/$id/learn': {
+      id: '/study/$id/learn'
+      path: '/study/$id/learn'
+      fullPath: '/study/$id/learn'
+      preLoaderRoute: typeof StudyIdLearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/study/$id/edit': {
+      id: '/study/$id/edit'
+      path: '/study/$id/edit'
+      fullPath: '/study/$id/edit'
+      preLoaderRoute: typeof StudyIdEditRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -179,9 +259,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
+  StudyNewRoute: StudyNewRoute,
   VocabularyIdRoute: VocabularyIdRoute,
   VocabularyNewRoute: VocabularyNewRoute,
+  StudyIndexRoute: StudyIndexRoute,
   VocabularyIndexRoute: VocabularyIndexRoute,
+  StudyIdEditRoute: StudyIdEditRoute,
+  StudyIdLearnRoute: StudyIdLearnRoute,
   VocabularyEditIdRoute: VocabularyEditIdRoute,
 }
 export const routeTree = rootRouteImport

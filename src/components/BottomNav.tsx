@@ -1,18 +1,21 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, BookOpen, Plus, User } from "lucide-react";
+import { Home, BookOpen, Plus, User, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "react-i18next";
 
 export default function BottomNav() {
+  const { t } = useTranslation();
   const location = useLocation();
   const { user } = useAuth();
   const pathname = location.pathname;
 
   const navItems = [
-    { href: "/", icon: Home, label: "Trang chủ" },
-    { href: "/vocabulary", icon: BookOpen, label: "Từ vựng" },
-    { href: "/vocabulary/new", icon: Plus, label: "Thêm", isCenter: true },
-    { href: user ? "/profile" : "/login", icon: User, label: user ? "Tôi" : "Đăng nhập" },
+    { href: "/", icon: Home, label: t("nav.dashboard") },
+    { href: "/study", icon: GraduationCap, label: t("nav.study") },
+    { href: "/vocabulary/new", icon: Plus, label: t("nav.addWord"), isCenter: true },
+    { href: "/vocabulary", icon: BookOpen, label: t("nav.vocabulary") },
+    { href: user ? "/profile" : "/login", icon: User, label: user ? t("nav.profile") : t("auth.signIn") },
   ];
 
   const isActive = (href: string) => {

@@ -18,24 +18,24 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import { levelColors, getLevelsForSystem, levelGradients, levelBorderColors } from "@/lib/levels";
+
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguages } from "@/hooks/useLanguages";
 
 export const Route = createFileRoute("/vocabulary/")(({
   component: VocabularyListPage,
 }));
 
-const levels: VocabularyLevel[] = ["A1", "A2", "B1", "B2", "C1", "C2"];
+// Use CEFR levels for filter (default)
 
-const levelColors: Record<VocabularyLevel, string> = {
-  A1: "bg-emerald-100 text-emerald-700 border-emerald-200",
-  A2: "bg-green-100 text-green-700 border-green-200",
-  B1: "bg-amber-100 text-amber-700 border-amber-200",
-  B2: "bg-orange-100 text-orange-700 border-orange-200",
-  C1: "bg-rose-100 text-rose-700 border-rose-200",
-  C2: "bg-purple-100 text-purple-700 border-purple-200",
-};
 
 function VocabularyListPage() {
+  const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
+  const { currentLanguageId } = useLanguage();
+  const { data: languages = [] } = useLanguages();
   const [selectedLevel, setSelectedLevel] = useState<VocabularyLevel | undefined>();
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -43,7 +43,11 @@ function VocabularyListPage() {
   const { data: vocabularies, isLoading, error } = useVocabularies({
     level: selectedLevel,
     search: searchQuery || undefined,
+    target_language_id: currentLanguageId || undefined,
   });
+
+  const selectedLanguage = languages.find(l => l.id === currentLanguageId);
+  const levels = selectedLanguage ? getLevelsForSystem(selectedLanguage.level_system) : getLevelsForSystem("cefr");
 
   const deleteMutation = useDeleteVocabulary();
 
@@ -55,10 +59,10 @@ function VocabularyListPage() {
     if (!deleteId) return;
     try {
       await deleteMutation.mutateAsync(deleteId);
-      toast.success("Đã xóa từ vựng!");
+      toast.success(t("vocabulary.deleted"));
       setDeleteId(null);
     } catch {
-      toast.error("Có lỗi xảy ra khi xóa");
+      toast.error(t("vocabulary.deleteError"));
     }
   };
 
@@ -180,25 +184,6 @@ function VocabularyListPage() {
             <div className="lg:hidden space-y-3">
               <AnimatePresence mode="popLayout">
                 {vocabularies.map((vocab, index) => {
-                  // Gradient backgrounds based on level
-                  const levelGradients: Record<VocabularyLevel, string> = {
-                    A1: "from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/40",
-                    A2: "from-green-50 to-emerald-50 dark:from-green-950/40 dark:to-emerald-950/40",
-                    B1: "from-amber-50 to-yellow-50 dark:from-amber-950/40 dark:to-yellow-950/40",
-                    B2: "from-orange-50 to-amber-50 dark:from-orange-950/40 dark:to-amber-950/40",
-                    C1: "from-rose-50 to-pink-50 dark:from-rose-950/40 dark:to-pink-950/40",
-                    C2: "from-purple-50 to-violet-50 dark:from-purple-950/40 dark:to-violet-950/40",
-                  };
-
-                  const levelBorderColors: Record<VocabularyLevel, string> = {
-                    A1: "border-l-emerald-400",
-                    A2: "border-l-green-400",
-                    B1: "border-l-amber-400",
-                    B2: "border-l-orange-400",
-                    C1: "border-l-rose-400",
-                    C2: "border-l-purple-400",
-                  };
-
                   return (
                     <motion.div
                       key={vocab.id}

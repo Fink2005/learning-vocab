@@ -10,6 +10,7 @@ import { routeTree } from "./routeTree.gen";
 import "./styles.css";
 import reportWebVitals from "./reportWebVitals.ts";
 import { AuthProvider } from "./hooks/useAuth";
+import "./lib/i18n"; // Initialize i18n
 
 // Create query client
 const queryClient = new QueryClient({

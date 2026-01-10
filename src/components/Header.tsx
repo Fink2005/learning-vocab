@@ -1,10 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import {
   BookOpen,
-  LogOut,
-  User,
   PlusCircle,
   LayoutDashboard,
+  GraduationCap
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -15,10 +14,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguages } from "@/hooks/useLanguages";
+import { getLanguageFlag } from "@/lib/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Header() {
-  const { user, signOut, loading } = useAuth();
+  const { user, signOut } = useAuth();
+  const { currentLanguageId, setLanguageId } = useLanguage();
+  const { data: languages = [] } = useLanguages();
 
   const handleSignOut = async () => {
     await signOut();
@@ -45,6 +51,14 @@ export default function Header() {
           Dashboard
         </Link>
         <Link
+          to="/study"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors font-medium"
+          activeProps={{ className: "bg-white/20" }}
+        >
+          <GraduationCap size={18} />
+          Study
+        </Link>
+        <Link
           to="/vocabulary"
           className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors font-medium"
           activeProps={{ className: "bg-white/20" }}
@@ -62,53 +76,76 @@ export default function Header() {
         </Link>
       </nav>
 
-      {/* User Menu */}
-      <div className="md:flex items-center gap-3 hidden">
-        {!loading && user ? (
+      <div className="flex items-center gap-3">
+        {/* Language Selector Desktop */}
+        {languages.length > 0 && (
+          <div className="hidden lg:block">
+            <Select
+              value={currentLanguageId || "all"}
+              onValueChange={(value) => setLanguageId(value === "all" ? "" : value)}
+            >
+              <SelectTrigger className="w-[180px] bg-brand-800 border-brand-600 text-white focus:ring-brand-400">
+                <SelectValue placeholder="Tất cả ngôn ngữ" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tất cả ngôn ngữ</SelectItem>
+                {languages.map((lang) => (
+                  <SelectItem key={lang.id} value={lang.id}>
+                    <span className="mr-2">{getLanguageFlag(lang.code)}</span>
+                    {lang.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
+        {/* User Menu */}
+        {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="flex items-center gap-2 hover:bg-white/10"
+                className="relative h-9 w-9 rounded-full bg-brand-800 ring-2 ring-brand-600 hover:bg-brand-700"
               >
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.avatar_url} alt={user.full_name} />
-                  <AvatarFallback className="bg-white/20 text-white">
-                    {user.full_name?.charAt(0) || user.email.charAt(0)}
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src={user.avatar_url} alt={user.full_name || ""} />
+                  <AvatarFallback className="bg-brand-800 text-white font-semibold">
+                    {user.email?.[0].toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <span className="hidden lg:block text-sm font-medium">
-                  {user.full_name || user.email}
-                </span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                {user.email}
-              </div>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none">
+                    {user.full_name}
+                  </p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {user.email}
+                  </p>
+                </div>
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link to="/profile" className="cursor-pointer w-full flex items-center">
-                  <User className="mr-2 h-4 w-4" />
+                <Link to="/profile" className="cursor-pointer">
                   Hồ sơ cá nhân
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSignOut} className="text-red-600 focus:text-red-600 cursor-pointer">
-                <LogOut className="mr-2 h-4 w-4" />
                 Đăng xuất
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Link to="/login">
-            <Button
-              variant="secondary"
-              className="bg-white text-brand-700 hover:bg-white/90"
-            >
-              Sign In
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link to="/login">
+              <Button variant="ghost" className="text-white hover:text-white hover:bg-white/10">
+                Đăng nhập
+              </Button>
+            </Link>
+          </div>
         )}
       </div>
     </header>

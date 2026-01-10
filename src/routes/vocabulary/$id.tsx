@@ -31,12 +31,14 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/vocabulary/$id")({
   component: VocabularyDetailPage,
 });
 
 function VocabularyDetailPage() {
+  const { t } = useTranslation();
   const { id } = Route.useParams();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -55,10 +57,10 @@ function VocabularyDetailPage() {
   const handleDelete = async () => {
     try {
       await deleteMutation.mutateAsync(id);
-      toast.success("Đã xóa từ vựng!");
+      toast.success(t("vocabulary.deleted"));
       navigate({ to: "/vocabulary" });
     } catch {
-      toast.error("Có lỗi xảy ra khi xóa");
+      toast.error(t("vocabulary.deleteError"));
     }
   };
 
@@ -71,9 +73,9 @@ function VocabularyDetailPage() {
         synonym: newSynonym.trim(),
       });
       setNewSynonym("");
-      toast.success("Đã thêm từ đồng nghĩa!");
+      toast.success(t("vocabulary.synonymAdded"));
     } catch {
-      toast.error("Có lỗi xảy ra");
+      toast.error(t("common.error"));
     }
   };
 
@@ -83,9 +85,9 @@ function VocabularyDetailPage() {
         id: synonymId,
         vocabularyId: id,
       });
-      toast.success("Đã xóa từ đồng nghĩa!");
+      toast.success(t("vocabulary.synonymDeleted"));
     } catch {
-      toast.error("Có lỗi xảy ra khi xóa");
+      toast.error(t("vocabulary.deleteError"));
     }
   };
 

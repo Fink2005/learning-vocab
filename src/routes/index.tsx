@@ -13,14 +13,25 @@ import {
   Sparkles,
 } from "lucide-react";
 import type { VocabularyLevel } from "@/types";
+import { useTranslation } from "react-i18next";
+import { levelProgressColors } from "@/lib/levels";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguages } from "@/hooks/useLanguages";
+import { getLanguageFlag } from "@/lib/utils";
+
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
 function Dashboard() {
+  const { t } = useTranslation();
   const { user, loading } = useAuth();
-  const { data: vocabularies } = useVocabularies();
+  const { currentLanguageId } = useLanguage();
+  const { data: languages = [] } = useLanguages();
+  const { data: vocabularies } = useVocabularies({
+    target_language_id: currentLanguageId || undefined
+  });
 
   // Calculate stats
   const levelCounts = vocabularies?.reduce(
@@ -46,12 +57,12 @@ function Dashboard() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#1C4D8D] dark:text-[#BDE8F5]">
-            {user ? `Xin chào, ${user.full_name || "bạn"}!` : "Chào mừng đến VocabDuck!"}
+            {user ? t("dashboard.welcome", { name: user.full_name || "bạn" }) : t("dashboard.welcomeGuest")}
           </h1>
           <p className="text-muted-foreground mt-1">
             {user
-              ? "Hãy tiếp tục học từ vựng mỗi ngày nhé 📚"
-              : "Đăng nhập để bắt đầu hành trình học từ vựng"}
+              ? t("dashboard.keepLearning")
+              : t("dashboard.loginPrompt")}
           </p>
         </div>
 
@@ -63,17 +74,17 @@ function Dashboard() {
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                   <div>
                     <h2 className="text-2xl font-bold mb-2">
-                      Bắt đầu học từ vựng ngay hôm nay!
+                      {t("dashboard.startLearning")}
                     </h2>
                     <p className="text-white/80 mb-4">
-                      Ghi chú từ vựng, synonym theo level A1-C2. Đồng bộ trên mọi thiết bị.
+                      {t("dashboard.appDescription")}
                     </p>
                     <Link to="/login">
                       <Button
                         size="lg"
                         className="bg-white text-[#1C4D8D] hover:bg-white/90"
                       >
-                        Đăng nhập với Google
+                        {t("dashboard.signInGoogle")}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </Link>
@@ -91,11 +102,11 @@ function Dashboard() {
                 <div className="w-12 h-12 bg-[#BDE8F5] dark:bg-[#1C4D8D]/30 rounded-xl flex items-center justify-center mb-2">
                   <BookOpen className="h-6 w-6 text-[#1C4D8D]" />
                 </div>
-                <CardTitle>Ghi chú từ vựng</CardTitle>
+                <CardTitle>{t("dashboard.noteVocab")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Thêm từ vựng mới với nghĩa, ví dụ và ghi chú cá nhân
+                  {t("dashboard.noteVocabDesc")}
                 </p>
               </CardContent>
             </Card>
@@ -105,11 +116,11 @@ function Dashboard() {
                 <div className="w-12 h-12 bg-[#4988C4]/30 dark:bg-[#4988C4]/20 rounded-xl flex items-center justify-center mb-2">
                   <TrendingUp className="h-6 w-6 text-[#1C4D8D]" />
                 </div>
-                <CardTitle>Quản lý Synonym</CardTitle>
+                <CardTitle>{t("dashboard.manageSynonym")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Ghi nhớ các từ đồng nghĩa để mở rộng vốn từ vựng
+                  {t("dashboard.manageSynonymDesc")}
                 </p>
               </CardContent>
             </Card>
@@ -119,11 +130,11 @@ function Dashboard() {
                 <div className="w-12 h-12 bg-[#0F2854]/10 dark:bg-[#0F2854]/20 rounded-xl flex items-center justify-center mb-2">
                   <Target className="h-6 w-6 text-[#0F2854]" />
                 </div>
-                <CardTitle>Phân loại Level</CardTitle>
+                <CardTitle>{t("dashboard.levelClassify")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Sắp xếp từ vựng theo trình độ IELTS từ A1 đến C2
+                  {t("dashboard.levelClassifyDesc")}
                 </p>
               </CardContent>
             </Card>
@@ -136,7 +147,7 @@ function Dashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-white/80 text-sm">Tổng từ vựng</p>
+                    <p className="text-white/80 text-sm">{t("dashboard.totalWords")}</p>
                     <p className="text-3xl font-bold">{totalWords}</p>
                   </div>
                   <BookOpen className="h-10 w-10 text-white/40" />
@@ -148,7 +159,7 @@ function Dashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-white/80 text-sm">Từ đồng nghĩa</p>
+                    <p className="text-white/80 text-sm">{t("dashboard.synonyms")}</p>
                     <p className="text-3xl font-bold">{totalSynonyms}</p>
                   </div>
                   <TrendingUp className="h-10 w-10 text-white/40" />
@@ -160,7 +171,7 @@ function Dashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-white/80 text-sm">Level cao nhất</p>
+                    <p className="text-white/80 text-sm">{t("dashboard.highestLevel")}</p>
                     <p className="text-3xl font-bold">
                       {vocabularies?.length
                         ? Math.max(
@@ -192,7 +203,7 @@ function Dashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-white/80 text-sm">Hôm nay</p>
+                    <p className="text-white/80 text-sm">{t("dashboard.today")}</p>
                     <p className="text-3xl font-bold">
                       {vocabularies?.filter((v) => {
                         const today = new Date();
@@ -211,20 +222,20 @@ function Dashboard() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Plus className="h-5 w-5 text-[#1C4D8D]" />
-                  Thao tác nhanh
+                  {t("dashboard.quickActions")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Link to="/vocabulary/new" className="block">
                   <Button className="w-full justify-start gap-2 bg-[#1C4D8D] hover:bg-[#0F2854]">
                     <Plus className="h-4 w-4" />
-                    Thêm từ vựng mới
+                    {t("dashboard.addNewWord")}
                   </Button>
                 </Link>
                 <Link to="/vocabulary" className="block">
                   <Button variant="outline" className="w-full justify-start gap-2">
                     <BookOpen className="h-4 w-4" />
-                    Xem danh sách từ vựng
+                    {t("dashboard.viewList")}
                   </Button>
                 </Link>
               </CardContent>
@@ -235,7 +246,7 @@ function Dashboard() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Clock className="h-5 w-5 text-[#1C4D8D]" />
-                  Từ vựng gần đây
+                  {t("dashboard.recentWords")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -271,10 +282,10 @@ function Dashboard() {
                 ) : (
                   <div className="text-center py-6 text-muted-foreground">
                     <BookOpen className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                    <p>Chưa có từ vựng nào</p>
+                    <p>{t("dashboard.noWords")}</p>
                     <Link to="/vocabulary/new">
                       <Button variant="link" className="mt-2">
-                        Thêm từ đầu tiên
+                        {t("dashboard.addFirst")}
                       </Button>
                     </Link>
                   </div>
@@ -284,11 +295,23 @@ function Dashboard() {
 
             {/* Level Distribution */}
             <Card className="md:col-span-2 lg:col-span-4">
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
                 <CardTitle className="flex items-center gap-2">
                   <Target className="h-5 w-5 text-violet-600" />
-                  Phân bố theo trình độ
+                  {t("profile.levelProgress")}
                 </CardTitle>
+                
+                {/* Current Language Indicator */}
+                {currentLanguageId && languages.find(l => l.id === currentLanguageId) && (
+                   <div className="flex items-center gap-2 bg-brand-50 dark:bg-gray-800 px-3 py-1.5 rounded-full border border-brand-100 dark:border-gray-700">
+                      <span className="text-lg leading-none">
+                        {getLanguageFlag(languages.find(l => l.id === currentLanguageId)!.code)}
+                      </span>
+                      <span className="text-sm font-medium text-brand-700 dark:text-brand-300">
+                        {languages.find(l => l.id === currentLanguageId)!.name}
+                      </span>
+                   </div>
+                )}
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
@@ -298,18 +321,10 @@ function Dashboard() {
                       const percentage = totalWords
                         ? Math.round((count / totalWords) * 100)
                         : 0;
-                      const colors = {
-                        A1: "bg-emerald-500",
-                        A2: "bg-green-500",
-                        B1: "bg-amber-500",
-                        B2: "bg-orange-500",
-                        C1: "bg-rose-500",
-                        C2: "bg-purple-500",
-                      };
                       return (
                         <div key={level} className="text-center">
                           <div
-                            className={`h-24 rounded-lg ${colors[level]} flex items-end justify-center pb-2 mb-2 relative overflow-hidden`}
+                            className={`h-24 rounded-lg ${levelProgressColors[level]} flex items-end justify-center pb-2 mb-2 relative overflow-hidden`}
                           >
                             <div
                               className="absolute inset-0 bg-gray-200 dark:bg-gray-700"

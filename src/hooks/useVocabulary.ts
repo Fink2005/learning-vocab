@@ -17,7 +17,7 @@ type VocabularyRow = Database["public"]["Tables"]["vocabularies"]["Row"];
 export const vocabularyKeys = {
   all: ["vocabularies"] as const,
   lists: () => [...vocabularyKeys.all, "list"] as const,
-  list: (filters: { level?: VocabularyLevel; search?: string }) =>
+  list: (filters: { level?: VocabularyLevel; search?: string; target_language_id?: string }) =>
     [...vocabularyKeys.lists(), filters] as const,
   details: () => [...vocabularyKeys.all, "detail"] as const,
   detail: (id: string) => [...vocabularyKeys.details(), id] as const,
@@ -33,6 +33,7 @@ export const synonymKeys = {
 export function useVocabularies(filters?: {
   level?: VocabularyLevel;
   search?: string;
+  target_language_id?: string;
 }) {
   const { user } = useAuth();
 
@@ -46,13 +47,18 @@ export function useVocabularies(filters?: {
         .order("created_at", { ascending: false });
 
       if (filters?.level) {
-        query = query.eq("level", filters.level);
+        // Type assertion needed until Supabase types are regenerated
+        query = query.eq("level", filters.level as any);
       }
 
       if (filters?.search) {
         query = query.or(
           `word.ilike.%${filters.search}%,meaning.ilike.%${filters.search}%`
         );
+      }
+
+      if (filters?.target_language_id) {
+        query = query.eq("target_language_id", filters.target_language_id);
       }
 
       const { data, error } = await query;
@@ -94,13 +100,14 @@ export function useCreateVocabulary() {
     mutationFn: async (input: CreateVocabularyInput) => {
       const { synonyms, ...vocabularyData } = input;
 
-      // Insert vocabulary
+      // Insert vocabulary (cast to any for Supabase type compatibility)
       const { data: vocabulary, error: vocabError } = await supabase
         .from("vocabularies")
         .insert({
           ...vocabularyData,
           user_id: user!.id,
-        })
+          level: vocabularyData.level as string,
+        } as any)
         .select()
         .single<VocabularyRow>();
 
@@ -136,9 +143,10 @@ export function useUpdateVocabulary() {
     mutationFn: async ({ id, ...input }: UpdateVocabularyInput) => {
       const { synonyms, ...vocabularyData } = input;
 
+      // Cast to any for Supabase type compatibility 
       const { data, error } = await supabase
         .from("vocabularies")
-        .update(vocabularyData)
+        .update(vocabularyData as any)
         .eq("id", id)
         .select()
         .single<VocabularyRow>();

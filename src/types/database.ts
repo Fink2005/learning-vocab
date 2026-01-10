@@ -16,6 +16,7 @@ export interface Database {
           word: string;
           meaning: string;
           example: string | null;
+          ipa: string | null;
           level: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
           notes: string | null;
           created_at: string;
@@ -26,8 +27,9 @@ export interface Database {
           user_id: string;
           word: string;
           meaning: string;
-          example?: string | null;
-          level?: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
+          example: string | null;
+          ipa: string | null;
+          level: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
           notes?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -38,6 +40,7 @@ export interface Database {
           word?: string;
           meaning?: string;
           example?: string | null;
+          ipa?: string | null;
           level?: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
           notes?: string | null;
           created_at?: string;
