@@ -16,13 +16,14 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { X, Plus, Loader2, ChevronLeft, Check, BookOpen } from "lucide-react";
-import type { VocabularyLevel, CreateVocabularyInput, Vocabulary } from "@/types";
+import type { VocabularyLevel, WordType, CreateVocabularyInput, Vocabulary } from "@/types";
 import { useCreateVocabulary, useUpdateVocabulary } from "@/hooks/useVocabulary";
 import { useLanguages } from "@/hooks/useLanguages";
 import { getLevelsForSystem, levelColors } from "@/lib/levels";
 import { getLanguageFlag } from "@/lib/utils";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { allWordTypes, wordTypeLabels, wordTypeColors } from "@/lib/wordTypes";
 
 interface VocabularyFormProps {
   vocabulary?: Vocabulary;
@@ -71,6 +72,7 @@ export function VocabularyForm({ vocabulary, mode = "create" }: VocabularyFormPr
     example: vocabulary?.example || "",
     ipa: vocabulary?.ipa || "",
     level: vocabulary?.level || levels[2] || "B1", // Default to middle level
+    word_type: vocabulary?.word_type || undefined,
     notes: vocabulary?.notes || "",
     synonyms: vocabulary?.synonyms?.map((s) => s.synonym) || [],
     target_language_id: vocabulary?.target_language_id || "",
@@ -250,6 +252,34 @@ export function VocabularyForm({ vocabulary, mode = "create" }: VocabularyFormPr
                   }`}
                 >
                   {level}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Word Type Selection */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12 }}
+            className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm"
+          >
+            <p className="text-sm font-medium text-muted-foreground mb-3">Từ loại</p>
+            <div className="flex gap-2 overflow-x-auto pb-2 flex-wrap">
+              {allWordTypes.map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, word_type: prev.word_type === type ? undefined : type as WordType }))
+                  }
+                  className={`px-3 py-2 rounded-lg font-medium text-xs transition-all whitespace-nowrap ${
+                    formData.word_type === type
+                      ? `${wordTypeColors[type]} border-2 shadow-sm`
+                      : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-2 border-transparent"
+                  }`}
+                >
+                  {wordTypeLabels[type]}
                 </button>
               ))}
             </div>
@@ -491,6 +521,31 @@ export function VocabularyForm({ vocabulary, mode = "create" }: VocabularyFormPr
                             <div className="flex items-center gap-2">
                               <div className={`w-3 h-3 rounded-full ${levelColors[level] || "bg-brand-500"}`} />
                               <span className="font-medium">{level}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Word Type - Desktop */}
+                  <div className="space-y-2">
+                    <Label className="text-base font-semibold text-brand-900 dark:text-brand-100">Từ loại</Label>
+                    <Select
+                      value={formData.word_type || ""}
+                      onValueChange={(value: WordType | "") => 
+                        setFormData((prev) => ({ ...prev, word_type: value || undefined }))
+                      }
+                    >
+                      <SelectTrigger className="h-12 border-brand-200 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800">
+                        <SelectValue placeholder="Chọn từ loại (tùy chọn)" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {allWordTypes.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            <div className="flex items-center gap-2">
+                              <div className={`w-3 h-3 rounded-full ${wordTypeColors[type].split(' ')[0]}`} />
+                              <span className="font-medium">{wordTypeLabels[type]}</span>
                             </div>
                           </SelectItem>
                         ))}

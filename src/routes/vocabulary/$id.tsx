@@ -7,6 +7,7 @@ import {
   useDeleteSynonym,
 } from "@/hooks/useVocabulary";
 import { LevelBadge } from "@/components/vocabulary/LevelBadge";
+import { WordTypeBadge } from "@/components/vocabulary/WordTypeBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -149,7 +150,10 @@ function VocabularyDetailPage() {
                     </Button>
                   )}
                 </div>
-                <LevelBadge level={vocabulary.level} />
+                <div className="flex items-center gap-2">
+                  <LevelBadge level={vocabulary.level} />
+                  <WordTypeBadge wordType={vocabulary.word_type} />
+                </div>
               </div>
               <div className="flex gap-2 shrink-0">
                 <Button variant="outline" size="icon" asChild>

@@ -42,7 +42,7 @@ export function useVocabularies(filters?: {
     queryFn: async () => {
       let query = supabase
         .from("vocabularies")
-        .select("*, synonyms(*)")
+        .select("*, synonyms!synonyms_vocabulary_id_fkey(*)")
         .eq("user_id", user!.id)
         .order("created_at", { ascending: false });
 
@@ -79,7 +79,7 @@ export function useVocabulary(id: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("vocabularies")
-        .select("*, synonyms(*)")
+        .select("*, synonyms!synonyms_vocabulary_id_fkey(*)")
         .eq("id", id)
         .eq("user_id", user!.id)
         .single();

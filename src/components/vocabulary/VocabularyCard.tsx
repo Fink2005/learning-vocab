@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LevelBadge } from "./LevelBadge";
+import { WordTypeBadge } from "./WordTypeBadge";
 import { MoreHorizontal, Pencil, Trash2, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -104,7 +105,10 @@ export function VocabularyCard({ vocabulary, onDelete }: VocabularyCardProps) {
           </p>
         )}
         <div className="flex items-center justify-between gap-2 flex-wrap">
-          <LevelBadge level={vocabulary.level} />
+          <div className="flex items-center gap-2">
+            <LevelBadge level={vocabulary.level} />
+            <WordTypeBadge wordType={vocabulary.word_type} />
+          </div>
           {vocabulary.synonyms && vocabulary.synonyms.length > 0 && (
             <div className="flex items-center gap-1 flex-wrap">
               {vocabulary.synonyms.slice(0, 3).map((syn) => (

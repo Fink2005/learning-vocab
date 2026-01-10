@@ -11,6 +11,18 @@ export type HSKLevel = "HSK1" | "HSK2" | "HSK3" | "HSK4" | "HSK5" | "HSK6";
 // Combined vocabulary level type
 export type VocabularyLevel = CEFRLevel | JLPTLevel | HSKLevel;
 
+// Word types (parts of speech)
+export type WordType = 
+  | "noun"        // danh từ
+  | "verb"        // động từ
+  | "adjective"   // tính từ
+  | "adverb"      // trạng từ
+  | "pronoun"     // đại từ
+  | "preposition" // giới từ
+  | "conjunction" // liên từ
+  | "interjection" // thán từ
+  | "phrase";     // cụm từ
+
 // Language interface
 export interface Language {
   id: string;
@@ -46,6 +58,7 @@ export interface Vocabulary {
   example: string | null;
   ipa: string | null;
   level: VocabularyLevel;
+  word_type: WordType | null;
   notes: string | null;
   target_language_id: string;
   created_at: string;
@@ -58,6 +71,8 @@ export interface Synonym {
   id: string;
   vocabulary_id: string;
   synonym: string;
+  linked_vocabulary_id: string | null;
+  linked_vocabulary?: Vocabulary;
   notes: string | null;
   created_at: string;
 }
@@ -68,6 +83,7 @@ export interface CreateVocabularyInput {
   example?: string;
   ipa?: string;
   level: VocabularyLevel;
+  word_type?: WordType;
   notes?: string;
   synonyms?: string[];
   target_language_id?: string; // Optional for backward compatibility
@@ -80,6 +96,7 @@ export interface UpdateVocabularyInput extends Partial<CreateVocabularyInput> {
 export interface CreateSynonymInput {
   vocabulary_id: string;
   synonym: string;
+  linked_vocabulary_id?: string;
   notes?: string;
 }
 
