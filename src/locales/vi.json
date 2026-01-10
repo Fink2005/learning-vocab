@@ -36,7 +36,8 @@
     "shuffle": "Trộn thẻ",
     "congrats": "Chúc mừng!",
     "completed": "Bạn đã hoàn thành tất cả các thẻ.",
-    "restart": "Học lại"
+    "restart": "Học lại",
+    "finish": "Hoàn thành"
   },
   "dashboard": {
     "welcome": "Xin chào, {{name}}!",

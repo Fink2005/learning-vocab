@@ -23,6 +23,11 @@ export default function BottomNav() {
     return pathname.startsWith(href);
   };
 
+  // Hide BottomNav on learn pages (they have their own controls)
+  if (pathname.includes("/learn")) {
+    return null;
+  }
+
   return (
     <motion.nav
       initial={{ y: 100 }}

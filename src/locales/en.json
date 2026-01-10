@@ -36,7 +36,8 @@
     "shuffle": "Shuffle",
     "congrats": "Congratulations!",
     "completed": "You have reviewed all cards.",
-    "restart": "Restart"
+    "restart": "Restart",
+    "finish": "Finish"
   },
   "dashboard": {
     "welcome": "Hello, {{name}}!",
