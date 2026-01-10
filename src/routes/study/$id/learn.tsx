@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight, RotateCw, Shuffle } from "lucide-react";
 import { motion } from "framer-motion";
+import { levelColors } from "@/lib/levels";
 
 export const Route = createFileRoute("/study/$id/learn")({
   component: LearnStudySetPage,
@@ -133,7 +134,7 @@ function LearnStudySetPage() {
       </div>
 
       {/* Card Area */}
-      <div className="flex-1 container mx-auto p-4 sm:p-6 flex flex-col items-center justify-center overflow-y-auto min-h-0">
+      <div className="flex-1 container mx-auto p-4 sm:p-6 flex flex-col items-center justify-center min-h-0">
         
         <div className="text-sm text-muted-foreground mb-4 font-medium tracking-wide shrink-0">
             {currentIndex + 1} / {cards.length}
@@ -148,6 +149,13 @@ function LearnStudySetPage() {
             >
                 {/* Front */}
                 <Card className="absolute inset-0 backface-hidden flex flex-col items-center justify-center p-8 sm:p-12 text-center bg-white dark:bg-gray-800 border-0 shadow-2xl rounded-3xl hover:shadow-brand-100/50 dark:hover:shadow-brand-900/30 transition-shadow">
+                    {currentCard?.vocabulary?.level && (
+                        <div className="absolute top-6 right-6">
+                            <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${levelColors[currentCard.vocabulary.level]} shadow-sm text-white`}>
+                                {currentCard.vocabulary.level}
+                            </span>
+                        </div>
+                    )}
                     <span className="text-4xl sm:text-6xl font-bold text-brand-900 dark:text-brand-100 mb-2 drop-shadow-sm select-none">
                         {currentCard?.vocabulary?.word}
                     </span>
@@ -165,7 +173,7 @@ function LearnStudySetPage() {
 
                 {/* Back */}
                 <Card className="absolute inset-0 backface-hidden flex flex-col items-center justify-center p-8 sm:p-12 text-center bg-brand-50/50 dark:bg-brand-900/20 border-2 border-brand-100 dark:border-brand-800 shadow-xl rounded-3xl" style={{ transform: "rotateY(180deg)" }}>
-                    <div className="flex-1 flex flex-col items-center justify-center w-full overflow-y-auto">
+                    <div className="flex-1 flex flex-col items-center justify-center w-full">
                         <h3 className="text-3xl sm:text-4xl font-semibold mb-6 text-brand-800 dark:text-brand-200 select-none">
                             {currentCard?.vocabulary?.meaning}
                         </h3>
