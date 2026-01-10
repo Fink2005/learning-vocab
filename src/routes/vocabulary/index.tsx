@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Plus, Search, Loader2, BookOpen, Filter, X, Trash2 } from "lucide-react";
 import type { VocabularyLevel } from "@/types";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Dialog,
   DialogContent,
@@ -175,40 +176,105 @@ function VocabularyListPage() {
           </div>
         ) : vocabularies && vocabularies.length > 0 ? (
           <>
-            {/* Mobile: Card list */}
-            <div className="lg:hidden space-y-2">
-              {vocabularies.map((vocab) => (
-                <Link key={vocab.id} to="/vocabulary/$id" params={{ id: vocab.id }}>
-                  <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-lg truncate">{vocab.word}</h3>
-                            <span className={`px-2 py-0.5 rounded text-xs font-medium ${levelColors[vocab.level]}`}>
-                              {vocab.level}
-                            </span>
-                          </div>
-                          <p className="text-muted-foreground text-sm line-clamp-2">{vocab.meaning}</p>
-                          {vocab.synonyms && vocab.synonyms.length > 0 && (
-                            <p className="text-xs text-brand-500 mt-1">{vocab.synonyms.length} từ đồng nghĩa</p>
-                          )}
-                        </div>
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setDeleteId(vocab.id);
-                          }}
-                          className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+            {/* Mobile: Card list with animations */}
+            <div className="lg:hidden space-y-3">
+              <AnimatePresence mode="popLayout">
+                {vocabularies.map((vocab, index) => {
+                  // Gradient backgrounds based on level
+                  const levelGradients: Record<VocabularyLevel, string> = {
+                    A1: "from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/40",
+                    A2: "from-green-50 to-emerald-50 dark:from-green-950/40 dark:to-emerald-950/40",
+                    B1: "from-amber-50 to-yellow-50 dark:from-amber-950/40 dark:to-yellow-950/40",
+                    B2: "from-orange-50 to-amber-50 dark:from-orange-950/40 dark:to-amber-950/40",
+                    C1: "from-rose-50 to-pink-50 dark:from-rose-950/40 dark:to-pink-950/40",
+                    C2: "from-purple-50 to-violet-50 dark:from-purple-950/40 dark:to-violet-950/40",
+                  };
+
+                  const levelBorderColors: Record<VocabularyLevel, string> = {
+                    A1: "border-l-emerald-400",
+                    A2: "border-l-green-400",
+                    B1: "border-l-amber-400",
+                    B2: "border-l-orange-400",
+                    C1: "border-l-rose-400",
+                    C2: "border-l-purple-400",
+                  };
+
+                  return (
+                    <motion.div
+                      key={vocab.id}
+                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, x: -100, scale: 0.9 }}
+                      transition={{
+                        delay: index * 0.05,
+                        duration: 0.3,
+                        ease: "easeOut",
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      layout
+                    >
+                      <Link to="/vocabulary/$id" params={{ id: vocab.id }}>
+                        <Card
+                          className={`
+                            bg-gradient-to-r ${levelGradients[vocab.level]}
+                            border-0 border-l-4 ${levelBorderColors[vocab.level]}
+                            shadow-sm hover:shadow-lg
+                            transition-all duration-300
+                            overflow-hidden
+                            relative
+                          `}
                         >
-                          <Trash2 size={18} />
-                        </button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+                          {/* Decorative circle */}
+                          <div className="absolute -right-8 -top-8 w-24 h-24 bg-white/30 dark:bg-white/5 rounded-full blur-2xl" />
+                          
+                          <CardContent className="p-4 relative">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <h3 className="font-bold text-xl text-gray-900 dark:text-white truncate">
+                                    {vocab.word}
+                                  </h3>
+                                  <span
+                                    className={`
+                                      px-2.5 py-1 rounded-full text-xs font-bold
+                                      ${levelColors[vocab.level]}
+                                      shadow-sm
+                                    `}
+                                  >
+                                    {vocab.level}
+                                  </span>
+                                </div>
+                                <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 font-medium">
+                                  {vocab.meaning}
+                                </p>
+                                {vocab.synonyms && vocab.synonyms.length > 0 && (
+                                  <div className="flex items-center gap-1.5 mt-2">
+                                    <span className="text-xs text-brand-500 font-semibold bg-brand-500/10 px-2 py-0.5 rounded-full">
+                                      {vocab.synonyms.length} từ đồng nghĩa
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  setDeleteId(vocab.id);
+                                }}
+                                className="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full transition-all duration-200"
+                              >
+                                <Trash2 size={18} />
+                              </motion.button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
             </div>
 
             {/* Desktop: Grid of VocabularyCards */}
